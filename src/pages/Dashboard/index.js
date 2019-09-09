@@ -33,19 +33,21 @@ export default function Dashboard() {
       const response = await api.get('schedule', {
         params: { date },
       });
-
+      const { appointments } = response.data;
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const data = range.map(hour => {
         const checkDate = setSeconds(setMinutes(setHours(date, hour), 0), 0);
         const compareDate = utcToZonedTime(checkDate, timezone);
-        console.tron.log(response.data);
         return {
           time: `${hour}:00h`,
           past: isBefore(compareDate, new Date()),
           // appointment: response.data.find(a =>
           //   isEqual(parseISO(a.date), compareDate)
           // ),
+          appointment: appointments.find(a =>
+            isEqual(parseISO(a.date), compareDate)
+          ),
         };
       });
 
